@@ -30,8 +30,7 @@ const echo = function (req, res) {
 
     // added the status of the request that was made
     function responseCallback(data, status) {
-        const json = JSON.stringify(data);
-        res.send({ body: json, status: status.code });
+        res.send({ ...data });
     }
 };
 
