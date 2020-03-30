@@ -3,7 +3,7 @@ import {isInvalidHttpMethod} from "../lib/utils";
 
 const paths = ["health"];
 
-const handler = function (req, context, responseCallback) {
+const handler = function (req, responseCallback) {
     if (isInvalidHttpMethod(req, "get", responseCallback)) return;
     checkHealth(new HealthService(), responseCallback);
 };

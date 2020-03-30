@@ -1,27 +1,43 @@
+// Note: What is echo-function.json? i created a fs function that writes output to that file (code removed)
+// Note: only complains during karma tests since it references webpack config
 
-import * as routes from "./handlers/handlers";
+import * as express from "express";
+
+import * as routes from "./handlers";
 import * as response from "./lib/http-responses";
 
+const app = express();
+const port = 3000;
 
 let handlers = {};
 
-Object.keys(routes).forEach(key => {
+Object.keys(routes).forEach((key, index) => {
     let item = {};
     routes[key].paths.forEach(path => {
         handlers[path] = routes[key].handler;
     });
+
     return item;
 });
-export const echo = function (context, req) {
-  context.log(req);
-  let resourcePath = req.params.action;
-  if (resourcePath in handlers) {
-      handlers[resourcePath](req, context, responseCallback);
-  } else {
-      responseCallback(response.ERROR_404);
-  }
 
-  function responseCallback(response) {
-      context.done(null, { body: JSON.stringify(response), status: response.code });
-  }
+// send request to respected controller based on route used
+// removed context as serverless is used in this build
+const echo = function (req, res) {
+    let resourcePath = req.route.path.replace("/", "");
+
+    if (resourcePath in handlers) {
+        handlers[resourcePath](req, responseCallback);
+    } else {
+        responseCallback(response.ERROR_404.code, response.ERROR_404);
+    }
+
+    // added the status of the request that was made
+    function responseCallback(data, status) {
+        const json = JSON.stringify(data);
+        res.send({ body: json, status: status.code });
+    }
 };
+
+// initial node server and routes for echo
+app.get("/echo", (req, res) => echo(req, res));
+app.listen(port, () => console.log(`listened to port ${port}!`));

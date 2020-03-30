@@ -7,11 +7,7 @@ module.exports = {
   mode: 'development',
   devtool: 'source-map',
   entry: './src/index.ts',
-  output: {
-    libraryTarget: 'commonjs',
-    path: path.resolve(__dirname, 'build'),
-    filename: 'src/bundle.js',
-  },
+  
   plugins: [
     new CopyPlugin([{from: 'echo-function.json', to: './echo-function.json'}]
     ),
