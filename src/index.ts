@@ -1,6 +1,3 @@
-// Note: What is echo-function.json? i created a fs function that writes output to that file (code removed)
-// Note: only complains during karma tests since it references webpack config
-
 import * as express from "express";
 
 import * as routes from "./handlers";
